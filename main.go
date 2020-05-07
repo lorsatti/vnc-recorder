@@ -144,6 +144,7 @@ func recorder(c *cli.Context) error {
 			"-y",
 			"-i", "-",
 			"-vcodec", "libx264", //"libvpx",//"libvpx-vp9"//"libx264"
+			"-pix_fmt", "yuv420p",
 			"-preset", "fast",
 			"-crf", "24",
 			c.String("outfile"),
@@ -151,14 +152,6 @@ func recorder(c *cli.Context) error {
 	}
 
 	go vcodec.Run()
-
-	for _, enc := range ccfg.Encodings {
-		myRenderer, ok := enc.(vnc.Renderer)
-
-		if ok {
-			myRenderer.SetTargetImage(screenImage)
-		}
-	}
 
 	cc.SetEncodings([]vnc.EncodingType{
 		vnc.EncCursorPseudo,
