@@ -35,8 +35,8 @@
 
 [[constraint]]
   name = "github.com/amitbet/vnc2video"
-  source = "https://github.com/saily/vnc2video.git"
-  branch = "reusable-encoders"
+  source = "https://github.com/gyuchang/vnc2video.git"
+  branch = "init-renderer-asap"
 
 [prune]
   go-tests = true

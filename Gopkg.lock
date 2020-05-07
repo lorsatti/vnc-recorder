@@ -2,16 +2,16 @@
 
 
 [[projects]]
-  branch = "reusable-encoders"
-  digest = "1:c9c2a078726605536f2c71e7a282e9f267dac31ac27379d63fd91bc6215fba84"
+  branch = "init-renderer-asap"
+  digest = "1:1693caf0ee84c7484eb4e62e8fa65a93ae3918b136798b49e06aed33f1792aa1"
   name = "github.com/amitbet/vnc2video"
   packages = [
     ".",
     "encoders",
   ]
   pruneopts = "UT"
-  revision = "22e16ea7e65b4c8682938bed11aab7576c22533f"
-  source = "https://github.com/saily/vnc2video.git"
+  revision = "ec8ed67f661d342ed512aba493effa1864a9a922"
+  source = "https://github.com/gyuchang/vnc2video.git"
 
 [[projects]]
   branch = "master"
