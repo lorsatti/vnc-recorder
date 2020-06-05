@@ -152,6 +152,7 @@ func recorder(c *cli.Context) error {
 	}
 
 	go vcodec.Run()
+	vcodec_running := true
 
 	cc.SetEncodings([]vnc.EncodingType{
 		vnc.EncCursorPseudo,
@@ -168,7 +169,11 @@ func recorder(c *cli.Context) error {
 		for {
 			timeStart := time.Now()
 
-			vcodec.Encode(screenImage.Image)
+			if vcodec_running {
+				vcodec.Encode(screenImage.Image)
+			} else {
+				return
+			}
 
 			timeTarget := timeStart.Add((1000 / time.Duration(vcodec.Framerate)) * time.Millisecond)
 			timeLeft := timeTarget.Sub(time.Now())
@@ -210,9 +215,10 @@ func recorder(c *cli.Context) error {
 		case signal := <-sigc:
 			if signal != nil {
 				log.Info(signal, " received, exit.")
+				vcodec_running = false
 				vcodec.Close()
 				// give some time to write the file
-				time.Sleep(time.Second * 5)
+				time.Sleep(15 * time.Second)
 				return nil
 			}
 		}
