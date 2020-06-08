@@ -215,10 +215,16 @@ func recorder(c *cli.Context) error {
 		case signal := <-sigc:
 			if signal != nil {
 				log.Info(signal, " received, exit.")
+
+				// stop sending images to encoder
 				vcodec_running = false
-				vcodec.Close()
+
 				// give some time to write the file
 				time.Sleep(15 * time.Second)
+
+				// close pipe
+				vcodec.Close()
+
 				return nil
 			}
 		}
