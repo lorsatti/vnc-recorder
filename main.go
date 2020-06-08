@@ -19,7 +19,7 @@ import (
 
 func init() {
 	log.SetOutput(os.Stdout)
-	log.SetLevel(log.InfoLevel)
+	log.SetLevel(log.WarnLevel)
 }
 
 func main() {
