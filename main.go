@@ -139,14 +139,12 @@ func recorder(c *cli.Context) error {
 		Cmd: exec.Command(ffmpeg_path,
 			"-f", "image2pipe",
 			"-vcodec", "ppm",
-			"-r", strconv.Itoa(c.Int("framerate")),
-			"-an", // no audio
-			"-y",
+			"-framerate", strconv.Itoa(c.Int("framerate")),
 			"-i", "-",
+			"-an", // no audio
+            "-y",
 			"-vcodec", "libx264", //"libvpx",//"libvpx-vp9"//"libx264"
 			"-pix_fmt", "yuv420p",
-			"-preset", "fast",
-			"-crf", "24",
 			c.String("outfile"),
 		),
 	}
@@ -219,11 +217,14 @@ func recorder(c *cli.Context) error {
 				// stop sending images to encoder
 				vcodec_running = false
 
-				// give some time to write the file
-				time.Sleep(15 * time.Second)
+				// give some time to finish encoding
+				time.Sleep(1 * time.Second)
 
 				// close pipe
 				vcodec.Close()
+
+				// give some time to write the file
+				time.Sleep(5 * time.Second)
 
 				return nil
 			}
