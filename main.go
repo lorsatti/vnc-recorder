@@ -142,7 +142,7 @@ func recorder(c *cli.Context) error {
 			"-framerate", strconv.Itoa(c.Int("framerate")),
 			"-i", "-",
 			"-an", // no audio
-            "-y",
+			"-y",
 			"-vcodec", "libx264", //"libvpx",//"libvpx-vp9"//"libx264"
 			"-pix_fmt", "yuv420p",
 			c.String("outfile"),
