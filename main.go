@@ -128,15 +128,15 @@ func recorder(c *cli.Context) error {
 		return err
 	}
 
-	ffmpeg_path, err := exec.LookPath(c.String("ffmpeg"))
+	ffmpegPath, err := exec.LookPath(c.String("ffmpeg"))
 	if err != nil {
 		panic(err)
 	}
-	log.Infof("Using %s for encoding", ffmpeg_path)
+	log.Infof("Using %s for encoding", ffmpegPath)
 	vcodec := &encoders.Encoder{
-		BinPath:   ffmpeg_path,
+		BinPath:   ffmpegPath,
 		Framerate: c.Int("framerate"),
-		Cmd: exec.Command(ffmpeg_path,
+		Cmd: exec.Command(ffmpegPath,
 			"-f", "image2pipe",
 			"-vcodec", "ppm",
 			"-framerate", strconv.Itoa(c.Int("framerate")),
@@ -150,7 +150,7 @@ func recorder(c *cli.Context) error {
 	}
 
 	go vcodec.Run()
-	vcodec_running := true
+	vcodecRunning := true
 
 	cc.SetEncodings([]vnc.EncodingType{
 		vnc.EncCursorPseudo,
@@ -167,7 +167,7 @@ func recorder(c *cli.Context) error {
 		for {
 			timeStart := time.Now()
 
-			if vcodec_running {
+			if vcodecRunning {
 				vcodec.Encode(screenImage.Image)
 			} else {
 				return
@@ -215,7 +215,7 @@ func recorder(c *cli.Context) error {
 				log.Info(signal, " received, exit.")
 
 				// stop sending images to encoder
-				vcodec_running = false
+				vcodecRunning = false
 
 				// give some time to finish encoding
 				time.Sleep(1 * time.Second)
@@ -230,5 +230,4 @@ func recorder(c *cli.Context) error {
 			}
 		}
 	}
-	return nil
 }
