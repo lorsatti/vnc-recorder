@@ -151,6 +151,8 @@ func recorder(c *cli.Context) error {
 
 	go vcodec.Run()
 	vcodecRunning := true
+	
+	defer gracefulClose(vcodec, &vcodecRunning)
 
 	cc.SetEncodings([]vnc.EncodingType{
 		vnc.EncCursorPseudo,
@@ -190,8 +192,6 @@ func recorder(c *cli.Context) error {
 		syscall.SIGQUIT)
 	frameBufferReq := 0
 	timeStart := time.Now()
-
-	defer gracefulClose(vcodec, &vcodecRunning)
 
 	for {
 		select {
