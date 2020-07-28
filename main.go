@@ -187,14 +187,15 @@ func recorder(c *cli.Context) error {
 		syscall.SIGHUP,
 		syscall.SIGINT,
 		syscall.SIGTERM,
-		syscall.SIGQUIT, )
+		syscall.SIGQUIT)
 	frameBufferReq := 0
 	timeStart := time.Now()
+
+	defer gracefulClose(vcodec, &vcodecRunning)
 
 	for {
 		select {
 		case err := <-errorCh:
-			gracefulClose(vcodec, &vcodecRunning)
 			panic(err)
 		case msg := <-cchClient:
 			log.Debugf("Received client message type:%v msg:%v\n", msg.Type(), msg)
@@ -215,7 +216,6 @@ func recorder(c *cli.Context) error {
 		case signal := <-sigc:
 			if signal != nil {
 				log.Info(signal, " received, exit.")
-				gracefulClose(vcodec, &vcodecRunning)
 				return nil
 			}
 		}
@@ -224,11 +224,11 @@ func recorder(c *cli.Context) error {
 
 func gracefulClose(e *encoders.Encoder, vcodecRunning *bool) {
 	// stop sending images to encoder
-	*vcodecRunning = false 
-	// give some time to finish encoding
-	time.Sleep(1 * time.Second) 
+	*vcodecRunning = false
+	// give some time to stop encoding
+	time.Sleep(1 * time.Second)
 	// close pipe
-	e.Close() 
+	e.Close()
 	// give some time to write the file
-	time.Sleep(5 * time.Second) 
+	time.Sleep(5 * time.Second)
 }
