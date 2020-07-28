@@ -19,7 +19,7 @@ import (
 
 func init() {
 	log.SetOutput(os.Stdout)
-	log.SetLevel(log.WarnLevel)
+	log.SetLevel(log.InfoLevel)
 }
 
 func main() {
@@ -151,7 +151,7 @@ func recorder(c *cli.Context) error {
 
 	go vcodec.Run()
 	vcodecRunning := true
-	
+
 	defer gracefulClose(vcodec, &vcodecRunning)
 
 	cc.SetEncodings([]vnc.EncodingType{
@@ -229,6 +229,9 @@ func gracefulClose(e *encoders.Encoder, vcodecRunning *bool) {
 	time.Sleep(1 * time.Second)
 	// close pipe
 	e.Close()
+	// kill ffmpeg
+	e.Cmd.Process.Signal(os.Interrupt)
+	e.Cmd.Process.Release()
 	// give some time to write the file
-	time.Sleep(5 * time.Second)
+	time.Sleep(15 * time.Second)
 }
